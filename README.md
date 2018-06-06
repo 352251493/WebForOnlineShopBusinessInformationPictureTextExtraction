@@ -1,0 +1,2 @@
+# WebForOnlineShopBusinessInformationPictureTextExtraction
+该项目为第七届中国软件杯大学生软件设计大赛A5赛题Web部分
