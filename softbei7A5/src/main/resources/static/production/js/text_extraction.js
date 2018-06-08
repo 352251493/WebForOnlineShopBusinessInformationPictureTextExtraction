@@ -283,4 +283,84 @@ function distinguishFinish(record) {
     successContent += '</div>';
     successContent += '</div>';
     $('#success-content').html(successContent);
+    getRecognitionResult();
+}
+
+function getRecognitionResult() {
+    $.ajax({
+        url: "/record/get_recognition_result",
+        type: "GET",
+        dataType: "json",
+        cache: false,//设置不缓存
+        success: getRecognitionResultSuccess,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            if (XMLHttpRequest.status >= 400 && XMLHttpRequest.status < 500) {
+                alert("客户端请求出错！错误代码（" + XMLHttpRequest.status + "," + XMLHttpRequest.readyState + "," + textStatus + "）");
+            } else {
+                if (XMLHttpRequest.status >= 500 || XMLHttpRequest.status <= 600) {
+                    alert("服务器出错！错误代码（" + XMLHttpRequest.status + "," + XMLHttpRequest.readyState + "," + textStatus + "）");
+                } else {
+                    if (XMLHttpRequest.status >= 300 || XMLHttpRequest.status < 400) {
+                        alert("重定向问题！错误代码（" + XMLHttpRequest.status + "," + XMLHttpRequest.readyState + "," + textStatus + "）");
+                    } else {
+                        alert("抱歉，系统好像出现一些异常！错误代码（" + XMLHttpRequest.status + "," + XMLHttpRequest.readyState + "," + textStatus + "）");
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getRecognitionResultSuccess(data) {
+    if (data["status"] == "success") {
+        var enterpriseInformationList = data["enterprise_information_list"];
+        var str =  $('#success-content').html();
+        str += '<div class="col-md-12 col-sm-12 col-xs-12">';
+        str += '<div class="x_panel">';
+        str += '<div class="x_title">';
+        str += '<h2>提取结果</h2>';
+        str += ' <ul class="nav navbar-right panel_toolbox">';
+        str += ' <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>';
+        str += '</li>';
+        str += '<li class="dropdown">';
+        str += '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>';
+        str += '<ul class="dropdown-menu" role="menu">';
+        str += '<li><a href="#">Settings 1</a>';
+        str += '</li>';
+        str += '<li><a href="#">Settings 2</a>';
+        str += '</li>';
+        str += '</ul>';
+        str += '</li>';
+        str += '<li><a class="close-link"><i class="fa fa-close"></i></a>';
+        str += '</li>';
+        str += '</ul>';
+        str += '<div class="clearfix"></div>';
+        str += '</div>';
+        str += '<div class="x_content">';
+        str += '<table class="table">';
+        str += '<thead>';
+        str += ' <tr>';
+        str += '<th>序号</th>';
+        str += '<th>企业名称</th>';
+        str += '<th>企业注册号</th>';
+        str += '</tr>';
+        str += '</thead>';
+        str += '<tbody>';
+        for (var i = 0; i < enterpriseInformationList.length; i++) {
+            var enterpriseInformation = enterpriseInformationList[i];
+            str += '<tr>';
+            str += '<th scope="row">' + (i + 1) + '</th>';
+            str += '<td>'+ enterpriseInformation["name"] + '</td>';
+            str += '<td>' + enterpriseInformation["registration_number"] + '</td>';
+            str += '</tr>'
+        }
+        str += '</tbody>';
+        str += '</table>';
+        str += '</div>';
+        str += '</div>';
+        str += '</div>';
+        $('#success-content').html(str);
+    } else {
+        alert(data["message"]);
+    }
 }

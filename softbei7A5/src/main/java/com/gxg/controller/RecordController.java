@@ -53,4 +53,10 @@ public class RecordController {
     public String getProcessResult(HttpServletRequest request) {
         return recordService.getProcessResult(request);
     }
+
+    @GetMapping(value = "/get_recognition_result")
+    @ResponseBody
+    public String getRecognitionResult(HttpServletRequest request) {
+        return recordService.getRecognitionResult(request);
+    }
 }

@@ -2,6 +2,7 @@ package com.gxg.services;
 
 import com.gxg.dao.RecordDao;
 import com.gxg.entities.Record;
+import com.gxg.util.ExcelReader;
 import com.gxg.util.UDPClient;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -302,6 +303,30 @@ public class RecordService {
                 status = "error";
                 String message = "尚未处理完成！";
                 jsonObject.accumulate("message", message);
+            }
+        }
+        jsonObject.accumulate("status", status);
+        return jsonObject.toString();
+    }
+
+    public String getRecognitionResult(HttpServletRequest request) {
+        JSONObject jsonObject = new JSONObject();
+        String status = "success";
+        HttpSession session = request.getSession();
+        if (session.getAttribute("record") == null) {
+            status = "error";
+            String message = "没有得到识别记录！";
+            jsonObject.accumulate("message", message);
+        } else {
+            Record record = (Record)session.getAttribute("record");
+            String path = record.getSaveSrc() + "test.xls";
+            ArrayList<JSONObject> enterpriseInformationList = ExcelReader.readExcel(path);
+            if (enterpriseInformationList == null) {
+                status = "error";
+                String message = "没有从excel中得到企业信息！";
+                jsonObject.accumulate("message", message);
+            } else {
+                jsonObject.accumulate("enterprise_information_list", enterpriseInformationList);
             }
         }
         jsonObject.accumulate("status", status);
