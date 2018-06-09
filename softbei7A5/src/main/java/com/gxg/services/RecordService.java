@@ -107,35 +107,40 @@ public class RecordService {
                 Record secondToLastRecord = secondToLastRecordList.get(0);
                 int secondToLastImgAll = secondToLastRecord.getImgAll();
                 double secondToLastProcessTime = (double)secondToLastRecord.getProcessTime() / 1000;
-                double secondToLastAverageProcessTime = secondToLastProcessTime / secondToLastImgAll;
+                double secondToLastAverageProcessTime;
+                if (secondToLastImgAll == 0) {
+                    secondToLastAverageProcessTime = 0;
+                } else {
+                    secondToLastAverageProcessTime = secondToLastProcessTime / secondToLastImgAll;
+                }
                 int secondToLastProcessNumber = secondToLastRecord.getProcessNumber();
                 if (secondToLastImgAll > lastImgAll) {
                     compareImgAllStatus = "down";
-                    compareImgAllNumber = ((double)(secondToLastImgAll - lastImgAll) / (double)secondToLastImgAll) * 100;
+                    compareImgAllNumber = secondToLastImgAll == 0 ? 0 : (((double)(secondToLastImgAll - lastImgAll) / (double)secondToLastImgAll) * 100);
                 } else {
                     compareImgAllStatus = "up";
-                    compareImgAllNumber = ((double)(lastImgAll - secondToLastImgAll) / (double)secondToLastImgAll) * 100;
+                    compareImgAllNumber = secondToLastImgAll == 0 ? 100 : (((double)(lastImgAll - secondToLastImgAll) / (double)secondToLastImgAll) * 100);
                 }
                 if (secondToLastProcessTime > lastProcessTime) {
                     compareProcessTimeStatus = "down";
-                    compareProcessTimeNumber = ((secondToLastProcessTime - lastProcessTime) / secondToLastProcessTime) * 100;
+                    compareProcessTimeNumber = secondToLastProcessTime == 0 ? 0 : (((secondToLastProcessTime - lastProcessTime) / secondToLastProcessTime) * 100);
                 } else {
                     compareProcessTimeStatus = "up";
-                    compareProcessTimeNumber = ((lastProcessTime - secondToLastProcessTime) / secondToLastProcessTime) * 100;
+                    compareProcessTimeNumber = secondToLastProcessTime == 0 ? 100 : (((lastProcessTime - secondToLastProcessTime) / secondToLastProcessTime) * 100);
                 }
                 if (secondToLastAverageProcessTime > lastAverageProcessTime) {
                     compareAverageProcessTimeStatus = "down";
-                    compareAverageProcessTimeNumber = ((secondToLastAverageProcessTime - lastAverageProcessTime) / secondToLastAverageProcessTime) * 100;
+                    compareAverageProcessTimeNumber = secondToLastAverageProcessTime == 0 ? 0 : (((secondToLastAverageProcessTime - lastAverageProcessTime) / secondToLastAverageProcessTime) * 100);
                 } else {
                     compareAverageProcessTimeStatus = "up";
-                    compareAverageProcessTimeNumber = ((lastAverageProcessTime - secondToLastAverageProcessTime) / secondToLastAverageProcessTime) * 100;
+                    compareAverageProcessTimeNumber = secondToLastAverageProcessTime == 0 ? 100 : (((lastAverageProcessTime - secondToLastAverageProcessTime) / secondToLastAverageProcessTime) * 100);
                 }
                 if (secondToLastProcessNumber > lastProcessNumber) {
                     compareProcessNumberStatus = "down";
-                    compareProcessNumberNumber = ((double)(secondToLastProcessNumber - lastProcessNumber) / secondToLastProcessNumber) * 100;
+                    compareProcessNumberNumber = secondToLastProcessNumber == 0 ? 0 : (((double)(secondToLastProcessNumber - lastProcessNumber) / secondToLastProcessNumber) * 100);
                 } else {
                     compareProcessNumberStatus = "up";
-                    compareProcessNumberNumber = ((double)(lastProcessNumber - secondToLastProcessNumber) / secondToLastProcessNumber) * 100;
+                    compareProcessNumberNumber = secondToLastProcessNumber == 0 ? 100 : (((double)(lastProcessNumber - secondToLastProcessNumber) / secondToLastProcessNumber) * 100);
                 }
             }
         }
